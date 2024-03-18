@@ -25,8 +25,8 @@ function deriveActivePlayer(gameTurn) {
   return currentPlayer;
 }
 
-function deriveWinner(gameBoard) {
-  let winner;
+function deriveWinner(gameBoard,playerNames) {
+  let winner="";
 
   for(let i=0; i<3;i++) {
     if(gameBoard[i][i] && ((gameBoard[i][0] === gameBoard[i][1] && gameBoard[i][1] === gameBoard[i][2]) || (gameBoard[0][i] === gameBoard[1][i] && gameBoard[1][i] === gameBoard[2][i]))) {
@@ -38,6 +38,8 @@ function deriveWinner(gameBoard) {
     winner = gameBoard[1][1];
   }
 
+  if(winner) winner = winner==='X'?playerNames['X']:playerNames['O'];
+  
   return winner;
 }
 
@@ -61,7 +63,7 @@ function App() {
   
   const gameBoard = deriveGameBoard(gameTurns);
 
-  const winner = deriveWinner(gameBoard);
+  const winner = deriveWinner(gameBoard,playerNames);
 
   const hasDraw = gameTurns.length === 9 && !winner;
 
@@ -101,7 +103,7 @@ function App() {
           <Player gname={PLAYERS.X} symbol="X" isActive = {activePlayer ==='X'} onChangePlayer={handlePlayerNameChange}/>
           <Player gname={PLAYERS.O} symbol="O" isActive = {activePlayer ==='O'} onChangePlayer={handlePlayerNameChange}/>
         </ol>
-        {(winner || hasDraw) && <GameOver winner={winner==='X'?playerNames['X']:playerNames['O']} onRestart={handleRestart}/>}
+        {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart}/>}
         <GameBoard 
         onSelectSquare = {handleSelectSquare} 
         board = {gameBoard}
